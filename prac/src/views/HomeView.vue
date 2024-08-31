@@ -11,6 +11,6 @@ export default {
 
 <template>
   <main>
-    <label>Main page</label>
+    <h1>Main page</h1>
   </main>
 </template>
