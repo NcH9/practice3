@@ -15,58 +15,65 @@
                 <span>{{ form.password }}</span>
                 <span class="error">{{ error.password }}</span>
             </div>
-
-            <!-- <div class="grid2">
-                <label>Admin</label>
-                <input type="checkbox" v-model.lazy="form.worship"/>
-            </div> -->
-
-            <button type="submit" @click="validateForm">Register</button>
+            <button type="submit" v-if="!isLoggedIn" @click="login">Log in</button>
+            <button type="submit" v-if="isLoggedIn" @click="login">Log out</button>
         </div>
     </form>
 </template>
   
 <script>
-    import{ auth } from '@/main'
-    import { createUserWithEmailAndPassword } from 'firebase/auth';
+    import { auth } from '@/main'
+    import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
     export default {
-        name: 'register',
+        name: 'login',
+        
         data(){
             return {
                 form: {
                     password: '',
                     email: '',
-                    worship: false,
                 },
                 error: {
                     password: '',
                     email: '',
                 },
+                isLoggedIn: false,
             }
         },
         methods: {
-            register(){
-                createUserWithEmailAndPassword(auth, this.form.email, this.form.password)
-                    .then(userCredential => {
-                        const user = userCredential.user;
-                        console.log(auth.currentUser)
-                    })
-                    .catch(error => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log(errorCode, errorMessage);
-                    })
+            async login(){
+                if (this.isLoggedIn){
+                    try {
+                        await signOut(auth);
+                        this.isLoggedIn = !this.isLoggedIn;
+                        console.log('logout successful!')
+                    } catch (error){
+                        console.log(error)
+                    }
+                    
+                } else {
+                    signInWithEmailAndPassword(auth, this.form.email, this.form.password)
+                        .then(userCredential => {
+                            const user = userCredential.user;
+                            console.log(auth.currentUser);
+                            console.log('login successful!');
+                        })
+                        .catch(error => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.log(errorCode, errorMessage);
+                        })
+                }
+                this.$router.push({name: 'home'});
             },
             submitForm(){
                 console.log('formsubmitted');
-                register();
                 this.resetForm();
             },
             resetForm(){
                 this.form = {
                     password: '',
                     email: '',
-                    worship: false,
                 };
                 this.error = {
                     password: '',
@@ -93,8 +100,13 @@
                 this.validatePassword();
                 if (!this.error.email && !this.error.password){
                     this.submitForm();
-                    this.$router.push({name: 'home'});
                 }
+            }
+        },
+        mounted() {
+            if (auth.currentUser){
+                this.isLoggedIn = true;
+                console.log(auth.currentUser)
             }
         }
     };

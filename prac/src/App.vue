@@ -1,27 +1,18 @@
-<script setup>
-import '@/assets/slider.css'
-</script>
 
 <template>
   <main class="main">
     <div class="grid">
       <div>
         <div class="flex-center">
-          <input class="searchbar" type="text" />
+          <RouterLink class="linkToSearch" :to="{name: 'search'}">Search:</RouterLink>
         </div>
           <nav>
             <v-tabs class="flex-between">
-              <v-tab>ENG
-                <label class="switch">
-                  <input type="checkbox">
-                  <span class="slider round"></span>
-                </label>
-                UA
-              </v-tab>
               <RouterLink :to="{name: 'home'}"><v-tab>Home</v-tab></RouterLink>
               <RouterLink to="/catalogue"><v-tab>Catalogue</v-tab></RouterLink>
               <RouterLink to="/bag"><v-tab>Bag</v-tab></RouterLink>
-              <RouterLink :to="{name: 'custom-form'}"><v-tab>Profile</v-tab></RouterLink>
+              <v-tab><signModule :auth="auth"/></v-tab>
+              <RouterLink to="/admin"><v-tab v-if="isUserAdmin">Admin panel</v-tab></RouterLink>
             </v-tabs>
           </nav>
         <RouterView />
@@ -34,10 +25,37 @@ import '@/assets/slider.css'
   
 </template>
 
+
+
+<script setup>
+import '@/assets/slider.css'
+import '@/components/signModule.vue'
+import signModule from '@/components/signModule.vue';
+import { getCurrentInstance } from 'vue';
+
+// function goToSearch(){
+//   this.$router.push('/search');
+// }
+const instance = getCurrentInstance();
+const isUserAdmin = instance.appContext.config.globalProperties.$isAdmin;
+function asd(){
+  console.log(isUserAdmin);
+}
+asd();
+</script>
+
+
+
 <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
+}
+.linkToSearch {
+  font-size: 32px;
+  margin: 20px;
+  display: flex;
+  justify-content: center;
 }
 .grid {
   display: grid;

@@ -38,9 +38,22 @@ const vuetify = createVuetify({
     components,
     directives
 })
-
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
 const app = createApp(App)
-
+if(getCookie('isAdmin')){
+  app.config.globalProperties.$isAdmin = getCookie('isAdmin');
+} else {
+  app.config.globalProperties.$isAdmin = false;
+}
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)

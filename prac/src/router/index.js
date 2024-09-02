@@ -35,10 +35,35 @@ const router = createRouter({
       props: route => ({ id: Number(route.params.id) })
     },
     {
-      path: '/custom-form',
-      name: 'custom-form',
+      path: '/register',
+      name: 'register',
       component: () => import('../components/register.vue'),
-    }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../components/login.vue'),
+    },
+    {
+      path: '/signModule',
+      name: 'signModule',
+      component: () => import('../components/signModule.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/Profile.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/Admin.vue'),
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('../views/Search.vue'),
+    },
   ]
 })
 
